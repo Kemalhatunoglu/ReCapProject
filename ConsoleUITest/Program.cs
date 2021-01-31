@@ -9,6 +9,7 @@ namespace ConsoleUITest
     {
         static void Main(string[] args)
         {
+            // Sadece test amaclıdır.
             CarManager carManager = new CarManager(new InMemoryCarDal());
 
             Car car = new Car();
