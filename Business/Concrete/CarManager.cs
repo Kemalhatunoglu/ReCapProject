@@ -4,6 +4,7 @@ using Entities.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -12,7 +13,6 @@ namespace Business.Concrete
     {
         ICarDal _carDal;
 
-
         public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
@@ -20,18 +20,35 @@ namespace Business.Concrete
 
         public void Add(Car car)
         {
-            int isExsist = _carDal.GetById(car);
-
-            if (isExsist != 0)
+            if (car.DailyPrice > 0)
             {
-                Console.WriteLine("Var olan bir araba ekleyemezsiniz.");
+                _carDal.Add(car);
+                Console.WriteLine("Arabanız başarı ile eklenmiştir.");
             }
-            _carDal.Add(car);
+            else
+            {
+                Console.WriteLine("Lütfen girdiğiniz değerin 0 dan daha büyük bir değer olmasına dikkat ediniz.");
+            }
         }
 
         public List<Car> GetAll()
         {
             return _carDal.GetAll();
+        }
+
+        public List<Car> GetCarsByBrandId(int id)
+        {
+            int brandCount = _carDal.GetAll(x => x.BrandId == id).Count();
+            if (id > brandCount)
+            {
+                Console.WriteLine($"{id} sayısında bir modelimiz yoktur.");
+            }
+            return _carDal.GetCarsByBradId(id);
+        }
+
+        public List<Car> GetCarsByColorId(int id)
+        {
+            return _carDal.GetCarsByColorId(id);
         }
 
         public void Update(Car car)
