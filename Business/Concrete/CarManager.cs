@@ -1,15 +1,15 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
-using Entities.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Business.Concrete
 {
-    public class CarManager : ICarService
+    public class CarManager : IRepositoryService<Car>, ICarService
     {
         ICarDal _carDal;
 
@@ -18,11 +18,11 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public void Add(Car entity)
         {
-            if (car.DailyPrice > 0)
+            if (entity.DailyPrice > 0)
             {
-                _carDal.Add(car);
+                _carDal.Add(entity);
                 Console.WriteLine("Arabanız başarı ile eklenmiştir.");
             }
             else
@@ -31,7 +31,17 @@ namespace Business.Concrete
             }
         }
 
-        public List<Car> GetAll()
+        public void Delete(Car entity)
+        {
+            _carDal.Delete(entity);
+        }
+
+        public Car Get(Expression<Func<Car, bool>> filter = null)
+        {
+            return _carDal.Get(filter);
+        }
+
+        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
         {
             return _carDal.GetAll();
         }
@@ -51,21 +61,21 @@ namespace Business.Concrete
             return _carDal.GetCarsByColorId(id);
         }
 
-        public void Update(Car car)
+        public void Update(Car entity)
         {
-            if (car.ModelYear > 2021)
+            if (entity.ModelYear > 2021)
             {
                 List<Car> carUpdate = _carDal.GetAll();
-                foreach (var item in carUpdate)
+                foreach (var car in carUpdate)
                 {
-                    if (item.ModelYear == 2021)
+                    if (car.ModelYear == 2021)
                     {
                         Console.WriteLine("Tarihi bu günün tarihten ilerisine güncelleyemezsiniz.");
                     }
                 }
             }
 
-            _carDal.Update(car);
+            _carDal.Update(entity);
         }
     }
 }
