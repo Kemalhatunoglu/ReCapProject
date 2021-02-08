@@ -20,6 +20,11 @@ namespace ConsoleUITest
 
             Console.WriteLine(carsById.Count());
 
+            foreach (var carDetail in carManager.GetCarDetials())
+            {
+                Console.WriteLine($"Sizin arabalarınız. Adı:{carDetail.CarName} Modeli:{carDetail.BrandName} Rengi: {carDetail.ColorName} Fiyatı: {carDetail.DailyPrice} almak istermisiniz.");
+            }
+
         }
 
         //private static void InMemoryTest()
