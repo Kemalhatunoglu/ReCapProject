@@ -59,6 +59,7 @@ namespace Core.DataAccess.EntityFramework
             {
                 var updatedEntity = context.Entry(entity); // Veri kaynağı ile ilişkilendir.
                 updatedEntity.State = EntityState.Modified; // güncelleme işlemini yap
+                
                 context.SaveChanges(); // Ve veri tabanına eklettik.
             }
         }

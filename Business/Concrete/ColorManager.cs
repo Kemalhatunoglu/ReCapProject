@@ -1,4 +1,7 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Abstract;
+using Core.Utilities.Concrete;
+using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -9,36 +12,40 @@ namespace Business.Concrete
 {
     public class ColorManager : IRepositoryService<Color>, IColorService
     {
-        IColorService _colorService;
+        IColorDal _colorDal;
 
-        public ColorManager(IColorService colorService)
+        public ColorManager(IColorDal colorDal)
         {
-            _colorService = colorService;
+            _colorDal = colorDal;
         }
 
-        public void Add(Color entity)
+        public IResult Add(Color entity)
         {
-            _colorService.Add(entity);
+            _colorDal.Add(entity);
+            return new SuccessResult();
+
         }
 
-        public void Delete(Color entity)
+        public IResult Delete(Color entity)
         {
-            _colorService.Delete(entity);
+            _colorDal.Delete(entity);
+            return new SuccessResult();
         }
 
-        public Color Get(Expression<Func<Color, bool>> filter = null)
+        public IDataResult<Color> Get(Expression<Func<Color, bool>> filter = null)
         {
-            return _colorService.Get(filter);
+            return new SuccessDataResult<Color>(_colorDal.Get(filter));
         }
 
-        public List<Color> GetAll(Expression<Func<Color, bool>> filter = null)
+        public IDataResult<List<Color>> GetAll(Expression<Func<Color, bool>> filter = null)
         {
-            return _colorService.GetAll(filter);
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(filter));
         }
 
-        public void Update(Color entity)
+        public IResult Update(Color entity)
         {
-            _colorService.Update(entity);
+            _colorDal.Update(entity);
+            return new SuccessResult();
         }
     }
 }

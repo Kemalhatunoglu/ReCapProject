@@ -1,5 +1,9 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Abstract;
+using Core.Utilities.Concrete;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
@@ -19,55 +23,32 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car entity)
+        public IResult Add(Car entity)
         {
-            if (entity.DailyPrice > 0)
+            int dailyPrice = 100000;
+            if (entity.DailyPrice > dailyPrice)
             {
                 _carDal.Add(entity);
-                Console.WriteLine("Arabanız başarı ile eklenmiştir.");
+                return new SuccessResult(Message.CarAdded);
             }
             else
             {
-                Console.WriteLine("Lütfen girdiğiniz değerin 0 dan daha büyük bir değer olmasına dikkat ediniz.");
+                return new ErrorResult($"{Message.CarDailyPriceInvalid}, Daily Price:{dailyPrice}");
             }
         }
 
-        public void Delete(Car entity)
+        public IResult Delete(Car entity)
         {
             _carDal.Delete(entity);
+            return new SuccessResult(Message.CarDeleted);
         }
 
-        public Car Get(Expression<Func<Car, bool>> filter = null)
+        public IDataResult<Car> Get(Expression<Func<Car, bool>> filter = null)
         {
-            return _carDal.Get(filter);
+            return new SuccessDataResult<Car>(_carDal.Get(filter));
         }
 
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {
-            return _carDal.GetAll();
-        }
-
-        public List<CarDetialDto> GetCarDetials()
-        {
-            return _carDal.GetCarDetials();
-        }
-
-        public List<Car> GetCarsByBrandId(int id)
-        {
-            int brandCount = _carDal.GetAll(x => x.BrandId == id).Count();
-            if (id > brandCount)
-            {
-                Console.WriteLine($"{id} sayısında bir modelimiz yoktur.");
-            }
-            return _carDal.GetCarsByBradId(id);
-        }
-
-        public List<Car> GetCarsByColorId(int id)
-        {
-            return _carDal.GetCarsByColorId(id);
-        }
-
-        public void Update(Car entity)
+        public IResult Update(Car entity)
         {
             if (entity.ModelYear > 2021)
             {
@@ -76,12 +57,33 @@ namespace Business.Concrete
                 {
                     if (car.ModelYear == 2021)
                     {
-                        Console.WriteLine("Tarihi bu günün tarihten ilerisine güncelleyemezsiniz.");
+                        return new ErrorResult(Message.CarUpdateInvalid);
                     }
                 }
             }
 
             _carDal.Update(entity);
+            return new SuccessResult();
+        }
+
+        public IDataResult<List<Car>> GetCarsByBradId(int id)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(x => x.BrandId == id));
+        }
+
+        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(x => x.ColorId == id));
+        }
+
+        public IDataResult<List<CarDetialDto>> GetCarDetials()
+        {
+            return new SuccessDataResult<List<CarDetialDto>>(_carDal.GetCarDetials());
+        }
+
+        public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
     }
 }

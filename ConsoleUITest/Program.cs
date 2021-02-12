@@ -14,16 +14,29 @@ namespace ConsoleUITest
         {
             //InMemoryTest();
 
+            //CarManager carManager = new CarManager(new EfCarDal());
+
+            //var carsById = carManager.GetCarsByBradId(1);
+
+            //Console.WriteLine(carsById.Count());
+
+            //foreach (var carDetail in carManager.GetCarDetials())
+            //{
+            //    Console.WriteLine($"Sizin arabalarınız. Adı:{carDetail.CarName} Modeli:{carDetail.BrandName} Rengi: {carDetail.ColorName} Fiyatı: {carDetail.DailyPrice} almak istermisiniz.");
+            //}
+
             CarManager carManager = new CarManager(new EfCarDal());
-         
-            var carsById = carManager.GetCarsByBrandId(1);
 
-            Console.WriteLine(carsById.Count());
-
-            foreach (var carDetail in carManager.GetCarDetials())
+            carManager.Add(new Car
             {
-                Console.WriteLine($"Sizin arabalarınız. Adı:{carDetail.CarName} Modeli:{carDetail.BrandName} Rengi: {carDetail.ColorName} Fiyatı: {carDetail.DailyPrice} almak istermisiniz.");
-            }
+                CarId=6,
+                BrandId=1,
+                CarName="kemal",
+                ColorId = 1,
+                DailyPrice = 100000,
+                Description ="kemal",
+                ModelYear = 2020
+            });
 
         }
 
