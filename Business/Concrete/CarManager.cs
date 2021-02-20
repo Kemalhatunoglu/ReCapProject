@@ -1,54 +1,89 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Abstract;
+using Core.Utilities.Concrete;
 using DataAccess.Abstract;
-using Entities.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Business.Concrete
 {
-    public class CarManager : ICarService
+    public class CarManager : IRepositoryService<Car>, ICarService
     {
         ICarDal _carDal;
-
 
         public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car entity)
         {
-            int isExsist = _carDal.GetById(car);
-
-            if (isExsist != 0)
+            int dailyPrice = 100000;
+            if (entity.DailyPrice > dailyPrice)
             {
-                Console.WriteLine("Var olan bir araba ekleyemezsiniz.");
+                _carDal.Add(entity);
+                return new SuccessResult(Message.CarAdded);
             }
-            _carDal.Add(car);
+            else
+            {
+                return new ErrorResult($"{Message.CarDailyPriceInvalid}, Daily Price:{dailyPrice}");
+            }
         }
 
-        public List<Car> GetAll()
+        public IResult Delete(Car entity)
         {
-            return _carDal.GetAll();
+            _carDal.Delete(entity);
+            return new SuccessResult(Message.CarDeleted);
         }
 
-        public void Update(Car car)
+        public IDataResult<Car> Get(Expression<Func<Car, bool>> filter = null)
         {
-            if (car.ModelYear > 2021)
+            return new SuccessDataResult<Car>(_carDal.Get(filter));
+        }
+
+        public IResult Update(Car entity)
+        {
+            if (entity.ModelYear > 2021)
             {
                 List<Car> carUpdate = _carDal.GetAll();
-                foreach (var item in carUpdate)
+                foreach (var car in carUpdate)
                 {
-                    if (item.ModelYear == 2021)
+                    if (car.ModelYear == 2021)
                     {
-                        Console.WriteLine("Tarihi bu günün tarihten ilerisine güncelleyemezsiniz.");
+                        return new ErrorResult(Message.CarUpdateInvalid);
                     }
                 }
             }
 
-            _carDal.Update(car);
+            _carDal.Update(entity);
+            return new SuccessResult();
+        }
+
+        public IDataResult<List<Car>> GetCarsByBradId(int id)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(x => x.BrandId == id));
+        }
+
+        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(x => x.ColorId == id));
+        }
+
+        public IDataResult<List<CarDetialDto>> GetCarDetials()
+        {
+            return new SuccessDataResult<List<CarDetialDto>>(_carDal.GetCarDetials());
+        }
+
+        public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
     }
 }
