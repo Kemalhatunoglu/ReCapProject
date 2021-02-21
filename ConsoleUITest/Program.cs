@@ -4,6 +4,7 @@ using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConsoleUITest
@@ -12,53 +13,47 @@ namespace ConsoleUITest
     {
         static void Main(string[] args)
         {
-            //InMemoryTest();
+            //GetAllCars();
+            //GetAllBrandName();
+            //GetCarsDailyPrice();
 
-            //CarManager carManager = new CarManager(new EfCarDal());
 
-            //var carsById = carManager.GetCarsByBradId(1);
-
-            //Console.WriteLine(carsById.Count());
-
-            //foreach (var carDetail in carManager.GetCarDetials())
-            //{
-            //    Console.WriteLine($"Sizin arabalarınız. Adı:{carDetail.CarName} Modeli:{carDetail.BrandName} Rengi: {carDetail.ColorName} Fiyatı: {carDetail.DailyPrice} almak istermisiniz.");
-            //}
-
-            CarManager carManager = new CarManager(new EfCarDal());
-
-            carManager.Add(new Car
-            {
-                CarId=6,
-                BrandId=1,
-                CarName="kemal",
-                ColorId = 1,
-                DailyPrice = 100000,
-                Description ="kemal",
-                ModelYear = 2020
-            });
 
         }
 
-        //private static void InMemoryTest()
-        //{
-        //    // Sadece test amaclıdır.
-        //    CarManager carManager = new CarManager(new InMemoryCarDal());
+        private static void GetCarsDailyPrice()
+        {
+            CarManager carManager = new CarManager(new EfCarDal());
+            List<Car> cars = carManager.GetByDailyPrice(300000, 350000).Data;
 
-        //    Car car = new Car();
-        //    car.CarId = 4;
-        //    car.BrandId = 2;
-        //    car.ColorId = 3;
-        //    car.DailyPrice = 300000;
-        //    car.Description = "Sağlam araba";
-        //    car.ModelYear = 2024;
+            foreach (var item in cars)
+            {
+                Console.WriteLine(item.CarName);
+            }
+        }
 
-        //    carManager.Update(car);
+        private static void GetAllBrandName()
+        {
+            BrandManager brandManager = new BrandManager(new EfBrandDal());
 
-        //    foreach (var item in carManager.GetAll())
-        //    {
-        //        Console.WriteLine(item.CarId);
-        //    }
-        ////}
+            List<Brand> brands = brandManager.GetAll().Data;
+
+            foreach (var item in brands)
+            {
+                Console.WriteLine(item.BrandName);
+            }
+        }
+
+        private static void GetAllCars()
+        {
+            CarManager carManager = new CarManager(new EfCarDal());
+
+            List<Car> cars = carManager.GetAll().Data;
+
+            foreach (var item in cars)
+            {
+                Console.WriteLine(item.CarName);
+            }
+        }
     }
 }

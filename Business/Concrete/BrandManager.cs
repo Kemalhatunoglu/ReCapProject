@@ -33,12 +33,19 @@ namespace Business.Concrete
 
         public IDataResult<Brand> Get(Expression<Func<Brand, bool>> filter = null)
         {
-            return new SuccessDataResult<Brand>(_brandDal.Get(filter));
+            var result = _brandDal.Get();
+            return new SuccessDataResult<Brand>(result);
         }
 
         public IDataResult<List<Brand>> GetAll(Expression<Func<Brand, bool>> filter = null)
         {
             return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(filter));
+        }
+
+        public IDataResult<Brand> GetById(int id)
+        {
+            var result = _brandDal.Get(x => x.BrandId == id);
+            return new SuccessDataResult<Brand>(result);
         }
 
         public IResult Update(Brand entity)

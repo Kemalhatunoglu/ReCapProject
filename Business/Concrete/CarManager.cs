@@ -81,9 +81,21 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetialDto>>(_carDal.GetCarDetials());
         }
 
-        public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter)
+        public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter = null)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
+        }
+
+        public IDataResult<Car> GetById(int id)
+        {
+            var result = _carDal.Get(x => x.CarId == id);
+            return new SuccessDataResult<Car>(result);
+        }
+
+        public IDataResult<List<Car>> GetByDailyPrice(decimal min, decimal max)
+        {
+            var result = _carDal.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max);
+            return new SuccessDataResult<List<Car>>(result);
         }
     }
 }
