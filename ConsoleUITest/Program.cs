@@ -16,9 +16,17 @@ namespace ConsoleUITest
             //GetAllCars();
             //GetAllBrandName();
             //GetCarsDailyPrice();
+            //GetCarRental();
 
+        }
 
+        private static void GetCarRental()
+        {
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
 
+            var result = rentalManager.GetRentCar(10);
+
+            Console.WriteLine(result);
         }
 
         private static void GetCarsDailyPrice()

@@ -20,6 +20,10 @@ namespace Business.Constants
         public static string IdListed = $"{0} numaralı arabalar listelendi";
         public static string Added = "Başarı ile eklenmiştir.";
 
+        public static string CarNotRental = "Araba kiralanmış durumdadır.";
+        public static string CarRental = "Araba kiralama işleminiz başarılı.";
+        
+
 
     }
 }

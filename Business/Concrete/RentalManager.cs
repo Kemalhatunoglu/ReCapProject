@@ -22,34 +22,47 @@ namespace Business.Concrete
 
         public IResult Add(Rental entity)
         {
-            // Burada Bir RentalCarsDto nesnesi yaratıp oradan model yılına ulaşılacak ve eklerken 2019 modelden aşağıda olanlar eklenmeecek.
-            _rentalDal.Add(entity);
-            return new SuccessResult(Message.Added);
+            return new SuccessResult();
         }
 
         public IResult Delete(Rental entity)
         {
-            throw new NotImplementedException();
+            return new SuccessResult();
         }
 
         public IDataResult<Rental> Get(Expression<Func<Rental, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<Rental>(_rentalDal.Get(filter));
         }
 
         public IDataResult<List<Rental>> GetAll(Expression<Func<Rental, bool>> filter = null)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(filter));
         }
 
         public IDataResult<Rental> GetById(int id)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<Rental>();
+        }
+
+        public IResult GetRentCar(int id)
+        {
+            var rentCar = _rentalDal.Get(x => x.RentalId == id);
+            if (rentCar.ReturnDate == null)
+            {
+                //Console.WriteLine("Araba kiralanmaya uygundur.");
+                return new SuccessResult(Message.CarRental);
+            }
+            else
+            {
+                return new ErrorResult(Message.CarNotRental);
+            }
+            
         }
 
         public IResult Update(Rental entity)
         {
-            throw new NotImplementedException();
+            return new SuccessResult();
         }
     }
 }
