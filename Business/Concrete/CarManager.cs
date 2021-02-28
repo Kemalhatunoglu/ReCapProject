@@ -1,11 +1,15 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Abstract;
 using Core.Utilities.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +27,12 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public IResult Add(Car entity)
+        [ValidationAspect(typeof(CarValidator))] // Aspect ekleddik AOP desenini eklioyruz.
+        public IResult Add(Car car)
         {
-            int dailyPrice = 100000;
-            if (entity.DailyPrice > dailyPrice)
-            {
-                _carDal.Add(entity);
-                return new SuccessResult(Message.CarAdded);
-            }
-            else
-            {
-                return new ErrorResult($"{Message.CarDailyPriceInvalid}, Daily Price:{dailyPrice}");
-            }
+            ValidationTool.Validate(new CarValidator(), car);
+            _carDal.Add(car);
+            return new SuccessResult(Message.CarAdded);
         }
 
         public IResult Delete(Car entity)
@@ -87,7 +85,7 @@ namespace Business.Concrete
             //{
             //    return new ErrorDataResult<List<Car>>();
             //}
-            
+
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
