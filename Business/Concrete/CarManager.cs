@@ -63,7 +63,7 @@ namespace Business.Concrete
             }
 
             _carDal.Update(entity);
-            return new SuccessResult();
+            return new SuccessResult(Message.CarUpdate);
         }
 
         public IDataResult<List<Car>> GetCarsByBradId(int id)
@@ -83,6 +83,11 @@ namespace Business.Concrete
 
         public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter = null)
         {
+            //if (DateTime.Now.Hour == 13)
+            //{
+            //    return new ErrorDataResult<List<Car>>();
+            //}
+            
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 

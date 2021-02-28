@@ -8,21 +8,23 @@ namespace Business.Constants
     {
         public static string CarAdded = "Araba başarı ile eklenmiştir.";
         public static string CarDeleted = "Araba başarı ile silinmiştir.";
+        public static string CarUpdate = "Araba başarı güncellenmiştir.";
+        public static string CarListed = "Arabalar listelendi";
+
+
         public static string CarDailyPriceInvalid = "Araba fiyatı günlük fiyattan düşük olamaz.";
         public static string CarUpdateInvalid = "Araba model yılı bugünden ileri olamaz.";
 
         public static string BrandAdded = "Marka başarı ile eklenmiştir.";
-
         public static string ColorAdded = "Renk başarı ile eklenmiştir.";
-        
 
-        public static string CarListed = "Arabalar listelendi";
+
         public static string IdListed = $"{0} numaralı arabalar listelendi";
         public static string Added = "Başarı ile eklenmiştir.";
 
         public static string CarNotRental = "Araba kiralanmış durumdadır.";
         public static string CarRental = "Araba kiralama işleminiz başarılı.";
-        
+
 
 
     }
