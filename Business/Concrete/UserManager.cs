@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Business.Concrete
 {
-    public class UserManager : IRepositoryService<User>, IUserService
+    public class UserManager : IUserService
     {
         public IResult Add(User entity)
         {

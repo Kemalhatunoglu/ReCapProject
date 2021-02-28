@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Business.Concrete
 {
-    public class RentalManager : IRepositoryService<Rental>, IRentalService
+    public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
 

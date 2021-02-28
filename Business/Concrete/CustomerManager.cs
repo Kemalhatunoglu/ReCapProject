@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Business.Concrete
 {
-    public class CustomerManager : IRepositoryService<Customer>, ICustomerService
+    public class CustomerManager : ICustomerService
     {
         public IResult Add(Customer entity)
         {

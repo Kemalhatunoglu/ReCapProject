@@ -24,8 +24,7 @@ namespace Business.Constants
 
         public static string CarNotRental = "Araba kiralanmış durumdadır.";
         public static string CarRental = "Araba kiralama işleminiz başarılı.";
-
-
-
+        public static string ImageAdded = "Resim başarı ile eklenmiştir.";
+        internal static string CarImageLimitExceeded;
     }
 }
