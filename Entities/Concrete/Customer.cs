@@ -12,6 +12,6 @@ namespace Entities.Concrete
         public string CompanyName { get; set; }
 
         public virtual List<Rental> Rentals { get; set; }
-        public virtual List<User> Users { get; set; }
+       
     }
 }

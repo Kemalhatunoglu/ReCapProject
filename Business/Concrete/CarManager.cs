@@ -1,9 +1,11 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Abstract;
+using Core.Utilities.Business;
 using Core.Utilities.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
@@ -27,7 +29,8 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        [ValidationAspect(typeof(CarValidator))] // Aspect ekleddik AOP desenini eklioyruz.
+        [SecuredOperation("product.add")]
+        [ValidationAspect(typeof(CarValidator))] // Aspect ekleddik AOP desenini ekliyoruz.
         public IResult Add(Car car)
         {
             ValidationTool.Validate(new CarValidator(), car);
@@ -46,21 +49,10 @@ namespace Business.Concrete
             return new SuccessDataResult<Car>(_carDal.Get(filter));
         }
 
-        public IResult Update(Car entity)
+        public IResult Update(Car car)
         {
-            if (entity.ModelYear > 2021)
-            {
-                List<Car> carUpdate = _carDal.GetAll();
-                foreach (var car in carUpdate)
-                {
-                    if (car.ModelYear == 2021)
-                    {
-                        return new ErrorResult(Message.CarUpdateInvalid);
-                    }
-                }
-            }
-
-            _carDal.Update(entity);
+            IResult result = BusinessRules.Run(CheckModelYearIsValid(car));
+            _carDal.Update(car);
             return new SuccessResult(Message.CarUpdate);
         }
 
@@ -100,5 +92,17 @@ namespace Business.Concrete
             var result = _carDal.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max);
             return new SuccessDataResult<List<Car>>(result);
         }
+
+        private IResult CheckModelYearIsValid(Car car)
+        {
+            var result = car.ModelYear;
+            var dailyYear = DateTime.Now.Year;
+            if (result > dailyYear)
+            {
+                return new ErrorResult(Message.CarDailyPriceInvalid);
+            }
+            return new SuccessResult();
+        }
+
     }
 }

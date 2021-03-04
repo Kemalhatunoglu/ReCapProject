@@ -16,7 +16,7 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(c => c.DailyPrice).NotEmpty();
             RuleFor(c => c.DailyPrice).GreaterThan(0);
             RuleFor(c => c.DailyPrice).GreaterThan(100000).When(c => c.ModelYear > 2020);
-            RuleFor(c => c.CarName).Must(StartWithA);
+            //RuleFor(c => c.CarName).Must(StartWithA);
         }
 
         private bool StartWithA(string arg)
