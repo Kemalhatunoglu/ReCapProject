@@ -2,6 +2,8 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Abstract;
@@ -29,11 +31,12 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         [SecuredOperation("product.add, admin")]
         [ValidationAspect(typeof(CarValidator))] // Aspect ekleddik AOP desenini ekliyoruz.
         public IResult Add(Car car)
         {
-            ValidationTool.Validate(new CarValidator(), car);
+            IResult result = BusinessRules.Run(CheckModelYearIsValid(car));
             _carDal.Add(car);
             return new SuccessResult(Message.CarAdded);
         }
@@ -49,6 +52,7 @@ namespace Business.Concrete
             return new SuccessDataResult<Car>(_carDal.Get(filter));
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
             IResult result = BusinessRules.Run(CheckModelYearIsValid(car));
@@ -71,6 +75,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetialDto>>(_carDal.GetCarDetials());
         }
 
+        [CacheAspect]
         public IDataResult<List<Car>> GetAll(Expression<Func<Car, bool>> filter = null)
         {
             //if (DateTime.Now.Hour == 13)
@@ -80,7 +85,7 @@ namespace Business.Concrete
 
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
-
+        [CacheAspect]
         public IDataResult<Car> GetById(int id)
         {
             var result = _carDal.Get(x => x.CarId == id);
@@ -104,5 +109,10 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Car car)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
