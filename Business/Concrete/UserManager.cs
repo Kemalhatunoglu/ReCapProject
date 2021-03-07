@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Entities.Concrete;
 using Core.Utilities.Abstract;
+using Core.Utilities.Concrete;
 using DataAccess.Abstract;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,8 @@ namespace Business.Concrete
         }
         IResult IRepositoryService<User>.Add(User entity)
         {
-            throw new NotImplementedException();
+            _userDal.Add(entity);
+            return new SuccessResult();
         }
         public IResult Update(User entity)
         {

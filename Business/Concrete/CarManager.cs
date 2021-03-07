@@ -29,7 +29,7 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        [SecuredOperation("product.add")]
+        [SecuredOperation("product.add, admin")]
         [ValidationAspect(typeof(CarValidator))] // Aspect ekleddik AOP desenini ekliyoruz.
         public IResult Add(Car car)
         {
